@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="description" content="Landing page quảng cáo 4 sách y học cổ truyền: giới thiệu, hình ảnh slide, đặt hàng, ưu đãi khuyến mãi, địa chỉ chi tiết, thiết kế tối ưu và responsive.">
+  <title>Sách Y Học Cổ Truyền - Bí Quyết Sức Khỏe Từ Đông Y</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* Sử dụng font Roboto đã tải */
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #f7fafc; /* bg-gray-50 */
+    }
+    /* Hiệu ứng hover cho ảnh slide */
+    .slide-img {
+      cursor: pointer;
+      transition: transform 0.15s ease-in-out; /* Thêm ease-in-out */
+    }
+    .slide-img:hover {
+      transform: scale(1.04);
+    }
+    /* CSS cho Modal xem ảnh */
+    .modal-bg {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      opacity: 0; /* Bắt đầu ẩn */
+      visibility: hidden; /* Bắt đầu ẩn */
+      transition: opacity 0.3s ease, visibility 0.3s ease; /* Hiệu ứng mờ dần */
+    }
+    .modal-bg.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      max-width: 90vw; /* Điều chỉnh max-width */
+      max-height: 85vh; /* Điều chỉnh max-height */
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2); /* Điều chỉnh shadow */
+      transform: scale(0.95); /* Hiệu ứng phóng to nhẹ */
+      transition: transform 0.3s ease;
+      overflow: hidden; /* Đảm bảo nội dung không tràn */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .modal-bg.active .modal-content {
+       transform: scale(1);
+    }
+    .modal-content img {
+        display: block; /* Loại bỏ khoảng trắng dưới ảnh */
+        max-width: 100%;
+        max-height: calc(85vh - 100px); /* Tính toán chiều cao tối đa cho ảnh */
+        object-fit: contain; /* Đảm bảo ảnh vừa vặn */
+        border-radius: 0.5rem; /* rounded-lg */
+    }
+    /* Ẩn thanh cuộn */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    /* Cải thiện focus-visible cho accessibility */
+    *:focus-visible {
+        outline: 2px solid #3b82f6; /* blue-500 */
+        outline-offset: 2px;
+    }
+    /* CSS cho thông báo lỗi */
+    .error-message {
+        color: #dc2626; /* text-red-600 */
+        font-size: 0.875rem; /* text-sm */
+        margin-top: 0.25rem; /* mt-1 */
+    }
+    /* CSS cho input lỗi */
+    input.border-red-500, select.border-red-500 {
+       border-color: #ef4444; /* border-red-500 */
+    }
+    input:focus.border-red-500, select:focus.border-red-500 {
+        --tw-ring-color: #ef4444; /* ring-red-500 */
+         border-color: #ef4444;
+    }
+
+  </style>
+</head>
+<body class="text-gray-800 antialiased">
+  <section class="bg-gradient-to-br from-yellow-100 via-red-50 to-orange-100 relative pt-12 pb-8 px-4 md:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:space-x-12">
+      <div class="flex-1 mb-8 md:mb-0 text-center md:text-left">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-red-800 mb-4 tracking-tight leading-tight">
+          Sách Y Học Cổ Truyền<br><span class="text-yellow-500">Bí Quyết Sức Khỏe Từ Đông Y</span>
+        </h1>
+        <p class="mb-6 text-lg md:text-xl max-w-xl mx-auto md:mx-0">
+          Bộ 4 sách chọn lọc tinh hoa Đông y: Dưỡng sinh, nhớ huyệt, chữa bệnh khu phản xạ, và ăn kiêng theo chuyên khoa. Tự chăm sóc sức khỏe chủ động, ứng dụng thực tiễn dễ dàng tại gia đình Việt!
+        </p>
+        <ul class="mb-8 list-none space-y-2 inline-block text-left">
+          <li class="flex items-center"><i class="fa-solid fa-book-medical text-yellow-600 mr-3 fa-fw"></i>In màu, giấy dày mịn, sách bản quyền</li>
+          <li class="flex items-center"><i class="fa-solid fa-leaf text-green-600 mr-3 fa-fw"></i>Kiến thức đơn giản hóa, ai cũng tiếp cận được</li>
+          <li class="flex items-center"><i class="fa-solid fa-people-group text-red-500 mr-3 fa-fw"></i>Phù hợp mọi lứa tuổi: Tự học, thực hành, làm quà tặng</li>
+        </ul>
+        <div class="mt-6">
+            <a href="#order-form" class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out transform hover:-translate-y-1">Đặt Mua Ngay</a>
+        </div>
+      </div>
+      <div class="flex-1 flex justify-center mt-8 md:mt-0">
+        <img src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/cam_nang_duong_sinh_thong_kinh_lac/2023_04_19_11_53_24_1-390x510.jpg"
+             alt="Bộ 4 sách y học cổ truyền về dưỡng sinh, huyệt đạo, khu phản xạ và ăn kiêng"
+             class="rounded-lg shadow-xl w-full max-w-xs sm:max-w-sm lg:max-w-md border-4 border-yellow-200"
+             onerror="this.onerror=null; this.src='https://placehold.co/400x510/fef9c3/b91c1c?text=S%C3%A1ch+YHCT';">
+      </div>
+    </div>
+  </section>
+
+  <section class="py-8 bg-gradient-to-r from-yellow-50 via-pink-50 to-pink-100 border-t-2 border-b-2 border-yellow-300">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+      <div class="flex-1 text-center lg:text-left max-w-md">
+        <span class="text-lg md:text-xl bg-yellow-300 px-4 py-1 rounded-md font-semibold text-red-800 mb-3 inline-block shadow">Khuyến mãi đặc biệt</span>
+        <h2 class="font-bold text-2xl md:text-3xl text-red-700 mb-4">Tiết kiệm tới 50% khi mua combo!</h2>
+        <ul class="text-lg space-y-2">
+          <li><span class="font-semibold text-green-600">Combo 4 cuốn:</span> <span class="line-through mr-1 text-gray-500">1.347.000đ</span> <span class="font-bold text-red-600 text-xl">499.000đ</span></li>
+          <li><span class="font-semibold text-yellow-600">Combo 3 cuốn bất kỳ:</span> <span class="font-bold text-red-500 text-xl">399.000đ</span></li>
+          <li><span class="font-semibold text-pink-600">Combo 2 cuốn bất kỳ:</span> <span class="font-bold text-red-400 text-xl">299.000đ</span></li>
+        </ul>
+      </div>
+      <div class="flex-1 max-w-md w-full">
+        <div class="bg-white p-5 rounded-xl shadow-lg grid grid-cols-2 gap-x-6 gap-y-4">
+          <div class="border-b pb-2">
+            <span class="block font-semibold text-gray-800">Mẹo Nhớ Huyệt</span>
+            <span class="text-gray-500 text-sm line-through">500.000đ</span>
+            <span class="text-red-600 font-bold block">229.000đ</span>
+          </div>
+          <div class="border-b pb-2">
+            <span class="block font-semibold text-gray-800">Khu Phản Xạ</span>
+            <span class="text-gray-500 text-sm line-through">350.000đ</span>
+            <span class="text-red-600 font-bold block">179.000đ</span>
+          </div>
+          <div class="border-b pb-2 md:border-b-0">
+            <span class="block font-semibold text-gray-800">Dưỡng Sinh Kinh Lạc</span>
+            <span class="text-gray-500 text-sm line-through">298.000đ</span>
+            <span class="text-red-600 font-bold block">229.000đ</span>
+          </div>
+          <div>
+            <span class="block font-semibold text-gray-800">Ăn Kiêng</span>
+            <span class="text-gray-500 text-sm line-through">199.000đ</span>
+            <span class="text-red-600 font-bold block">149.000đ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="books" class="max-w-6xl mx-auto py-12 px-4">
+    <h2 class="text-center text-3xl md:text-4xl font-extrabold text-red-800 mb-12">Khám Phá Nội Dung Từng Cuốn Sách</h2>
+    <div class="flex flex-col md:flex-row mb-16 md:space-x-10 items-start">
+      <div class="md:w-2/5 w-full mb-6 md:mb-0">
+        <div class="sticky top-6">
+          <img id="main-img-1" class="slide-img w-full h-80 object-cover rounded-lg shadow-md mb-3 cursor-pointer" src="https://bizbooks.vn/uploads/images/2024/thang-9/1-100-huyet-dao-5.jpg" alt="Bìa sách Mẹo Nhớ Huyệt" data-book="1">
+          <div class="flex gap-2 hide-scrollbar overflow-x-auto pb-2">
+            <img src="https://bizbooks.vn/uploads/images/2024/thang-9/1-100-huyet-dao-5.jpg" alt="Ảnh xem trước 1 - Mẹo Nhớ Huyệt" class="slide-img w-16 h-20 object-cover border-2 border-yellow-500 rounded hover:border-yellow-500 cursor-pointer" data-book="1" data-index="0">
+            <img src="https://newshop.vn/public/uploads/news/top-10-cuon-sach-bam-huyet-tri-bach-benh-min.jpg" alt="Ảnh xem trước 2 - Mẹo Nhớ Huyệt" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-yellow-500 cursor-pointer" data-book="1" data-index="1">
+            <img src="https://dongyquangminh.vn/wp-content/uploads/2023/12/fdea3958170fbf51e61e.jpg" alt="Ảnh xem trước 3 - Mẹo Nhớ Huyệt" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-yellow-500 cursor-pointer" data-book="1" data-index="2">
+            <img src="https://images.xuatbanyhoc.vn/Picture/2022/11/8/image-2022110817145788.jpg" alt="Ảnh xem trước 4 - Mẹo Nhớ Huyệt" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-yellow-500 cursor-pointer" data-book="1" data-index="3">
+            <img src="https://newshop.vn/public/uploads/news/sach-dong-y-min.jpg" alt="Ảnh xem trước 5 - Mẹo Nhớ Huyệt" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-yellow-500 cursor-pointer" data-book="1" data-index="4">
+          </div>
+           <button type="button" class="mt-2 w-full text-center text-blue-600 hover:text-blue-800 view-gallery-btn" data-book="1">
+            <i class="fas fa-search-plus mr-1"></i> Xem ảnh lớn
+          </button>
+        </div>
+      </div>
+      <div class="md:w-3/5 w-full">
+        <h3 class="text-2xl font-bold text-yellow-800 mb-3">1. Mẹo Nhớ Huyệt Đạo Trị Bệnh</h3>
+        <div class="mb-4 flex items-center space-x-4">
+          <span class="text-xl text-red-600 font-bold">229.000đ</span>
+          <span class="text-gray-500 text-base line-through">500.000đ</span>
+          <span class="bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded">-54%</span>
+        </div>
+        <p class="mb-4 text-lg leading-relaxed">Cẩm nang ghi nhớ siêu tốc hệ thống huyệt đạo, giúp người học tiếp cận nhanh và chính xác các vị trí, công dụng. Hình ảnh minh họa màu trực quan, ứng dụng ngay vào bấm huyệt, châm cứu, day bóp tại nhà hoặc cho người học, thầy thuốc trẻ.</p>
+        <ul class="list-disc list-inside ml-1 space-y-1 text-base marker:text-yellow-600">
+          <li>Sơ đồ minh họa lớn, rõ ràng trên khắp cơ thể</li>
+          <li>Ứng dụng trị liệu, khỏe mạnh chủ động</li>
+          <li>Gợi ý mẹo nhớ khoa học, dễ tiếp cận cho mọi đối tượng</li>
+          <li>Dày 240 trang, giấy mịn, in màu chất lượng cao</li>
+        </ul>
+         <a href="#order-form" class="inline-block mt-5 px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition">Chọn mua sách này</a>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row-reverse mb-16 md:space-x-10 md:space-x-reverse items-start">
+      <div class="md:w-2/5 w-full mb-6 md:mb-0">
+         <div class="sticky top-6">
+            <img id="main-img-2" class="slide-img w-full h-80 object-cover rounded-lg shadow-md mb-3 cursor-pointer" src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/lieu_phap_chua_benh_toan_than___khu_phan_xa/2024_11_04_16_31_50_8-390x510.jpg" alt="Bìa sách Liệu Pháp Chữa Bệnh Toàn Thân Khu Phản Xạ" data-book="2">
+            <div class="flex gap-2 hide-scrollbar overflow-x-auto pb-2">
+              <img src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/lieu_phap_chua_benh_toan_than___khu_phan_xa/2024_11_04_16_31_50_8-390x510.jpg" alt="Ảnh xem trước 1 - Khu Phản Xạ" class="slide-img w-16 h-20 object-cover border-2 border-pink-500 rounded hover:border-pink-500 cursor-pointer" data-book="2" data-index="0">
+              <img src="https://dongyquangminh.vn/wp-content/uploads/2023/12/fa73cdc6e3914bcf1280.jpg" alt="Ảnh xem trước 2 - Khu Phản Xạ" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-pink-500 cursor-pointer" data-book="2" data-index="1">
+              <img src="https://nhasachminhthang.vn/UserFiles/files/Lich/rp_Lieuphapchuabenhtoanthan_25x35_76tr_Page6.png" alt="Ảnh xem trước 3 - Khu Phản Xạ" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-pink-500 cursor-pointer" data-book="2" data-index="2">
+              <img src="https://nhasachminhthang.vn/UserFiles/files/Lich/rp_Lieuphapchuabenhtoanthan_25x35_76tr_Page3.png" alt="Ảnh xem trước 4 - Khu Phản Xạ" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-pink-500 cursor-pointer" data-book="2" data-index="3">
+              <img src="https://salt.tikicdn.com/cache/w300/ts/product/7f/b8/09/74d403a4dd797ed9ddfa7bf7e13e136f.jpg" alt="Ảnh xem trước 5 - Khu Phản Xạ" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-pink-500 cursor-pointer" data-book="2" data-index="4">
+            </div>
+             <button type="button" class="mt-2 w-full text-center text-blue-600 hover:text-blue-800 view-gallery-btn" data-book="2">
+               <i class="fas fa-search-plus mr-1"></i> Xem ảnh lớn
+             </button>
+         </div>
+      </div>
+      <div class="md:w-3/5 w-full">
+        <h3 class="text-2xl font-bold text-pink-700 mb-3">2. Liệu Pháp Chữa Bệnh Toàn Thân Khu Phản Xạ</h3>
+        <div class="mb-4 flex items-center space-x-4">
+          <span class="text-xl text-red-600 font-bold">179.000đ</span>
+          <span class="text-gray-500 text-base line-through">350.000đ</span>
+           <span class="bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded">-49%</span>
+        </div>
+        <p class="mb-4 text-lg leading-relaxed">Dễ thực hành tại nhà với các kỹ thuật day ấn, tác động khu phản xạ trên mặt, tay, chân, giúp phòng chống, hỗ trợ điều trị hàng trăm bệnh phổ biến mà không dùng thuốc. Minh họa chi tiết, phân tích vai trò mỗi khu vực giúp bạn tự tin ứng dụng.</p>
+        <ul class="list-disc list-inside ml-1 space-y-1 text-base marker:text-pink-600">
+          <li>Hướng dẫn cụ thể vị trí khu phản xạ, kỹ thuật day bấm</li>
+          <li>Giảm đau, phòng ngừa các bệnh lý thường gặp</li>
+          <li>Gợi ý ứng dụng ngay cho gia đình, người thân</li>
+          <li>200 trang in màu, dễ đọc, tính thực tiễn cao</li>
+        </ul>
+         <a href="#order-form" class="inline-block mt-5 px-6 py-2 bg-pink-500 text-white font-semibold rounded-lg shadow hover:bg-pink-600 transition">Chọn mua sách này</a>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row mb-16 md:space-x-10 items-start">
+      <div class="md:w-2/5 w-full mb-6 md:mb-0">
+        <div class="sticky top-6">
+          <img id="main-img-3" class="slide-img w-full h-80 object-cover rounded-lg shadow-md mb-3 cursor-pointer" src="https://cdn1.fahasa.com/media/catalog/product/c/a/cam_nang_duong_sinh_thong_kinh_lac_10_2019_02_22_10_21_43.jpg" alt="Bìa sách Cẩm Nang Dưỡng Sinh Thông Kinh Lạc" data-book="3">
+          <div class="flex gap-2 hide-scrollbar overflow-x-auto pb-2">
+            <img src="https://cdn1.fahasa.com/media/catalog/product/c/a/cam_nang_duong_sinh_thong_kinh_lac_10_2019_02_22_10_21_43.jpg" alt="Ảnh xem trước 1 - Dưỡng Sinh Kinh Lạc" class="slide-img w-16 h-20 object-cover border-2 border-green-500 rounded hover:border-green-500 cursor-pointer" data-book="3" data-index="0">
+            <img src="https://cdn1.fahasa.com/media/catalog/product/c/a/cam_nang_duong_sinh_thong_kinh_lac_9_2019_02_22_10_21_43.jpg" alt="Ảnh xem trước 2 - Dưỡng Sinh Kinh Lạc" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-green-500 cursor-pointer" data-book="3" data-index="1">
+            <img src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/cam_nang_duong_sinh_thong_kinh_lac/2023_04_19_11_53_24_6-390x510.jpg" alt="Ảnh xem trước 3 - Dưỡng Sinh Kinh Lạc" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-green-500 cursor-pointer" data-book="3" data-index="2">
+            <img src="https://vinabooks.vn/wp-content/uploads/2024/02/2023_04_19_11_53_24_4-390x510-1.jpg" alt="Ảnh xem trước 4 - Dưỡng Sinh Kinh Lạc" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-green-500 cursor-pointer" data-book="3" data-index="3">
+            <img src="https://product.hstatic.net/200000481913/product/4217c824-b224-4447-80bf-d018b5eaeb31_55c8d544a4d64aa882e58e055060696d_large.jpg" alt="Ảnh xem trước 5 - Dưỡng Sinh Kinh Lạc" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-green-500 cursor-pointer" data-book="3" data-index="4">
+          </div>
+           <button type="button" class="mt-2 w-full text-center text-blue-600 hover:text-blue-800 view-gallery-btn" data-book="3">
+             <i class="fas fa-search-plus mr-1"></i> Xem ảnh lớn
+           </button>
+        </div>
+      </div>
+      <div class="md:w-3/5 w-full">
+        <h3 class="text-2xl font-bold text-green-700 mb-3">3. Cẩm Nang Dưỡng Sinh Thông Kinh Lạc</h3>
+        <div class="mb-4 flex items-center space-x-4">
+          <span class="text-xl text-red-600 font-bold">229.000đ</span>
+          <span class="text-gray-500 text-base line-through">298.000đ</span>
+           <span class="bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded">-23%</span>
+        </div>
+        <p class="mb-4 text-lg leading-relaxed">Hướng dẫn thực hành dưỡng sinh, thông kinh lạc, các bài tập vận động, xoa bóp, ăn uống giúp lưu thông khí huyết, kéo dài sức khỏe và tuổi thọ. Sách vận dụng cả kiến thức cổ truyền và phương pháp hiện đại, phù hợp mọi lứa tuổi.</p>
+        <ul class="list-disc list-inside ml-1 space-y-1 text-base marker:text-green-600">
+          <li>Chi tiết 12 kinh chính, bài tập thực tiễn hàng ngày</li>
+          <li>Hình ảnh minh họa bài tập động tác cụ thể, rõ ràng</li>
+          <li>Kỹ thuật xoa bóp, day ấn giúp phòng bệnh mãn tính</li>
+          <li>220 trang, in màu trang nhã, dễ theo dõi</li>
+        </ul>
+         <a href="#order-form" class="inline-block mt-5 px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition">Chọn mua sách này</a>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row-reverse mb-16 md:space-x-10 md:space-x-reverse items-start">
+       <div class="md:w-2/5 w-full mb-6 md:mb-0">
+         <div class="sticky top-6">
+            <img id="main-img-4" class="slide-img w-full h-80 object-cover rounded-lg shadow-md mb-3 cursor-pointer" src="https://vn-test-11.slatic.net/p/83eab7e9fbdaf041dd4c19d8e1a7fefd.jpg" alt="Bìa sách Liệu Pháp Ăn Kiêng Cho Các Loại Bệnh" data-book="4">
+            <div class="flex gap-2 hide-scrollbar overflow-x-auto pb-2">
+              <img src="https://vn-test-11.slatic.net/p/83eab7e9fbdaf041dd4c19d8e1a7fefd.jpg" alt="Ảnh xem trước 1 - Ăn Kiêng" class="slide-img w-16 h-20 object-cover border-2 border-purple-500 rounded hover:border-purple-500 cursor-pointer" data-book="4" data-index="0">
+              <img src="https://tacgia.vn/image/cache/catalog/san-pham/do-huu-dinh/chua-benh-phong-benh-tam-ty-phe-than-can-tacgiavn-500x500.jpg" alt="Ảnh xem trước 2 - Ăn Kiêng" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-purple-500 cursor-pointer" data-book="4" data-index="1">
+              <img src="https://bvyhctnghean.vn/Uploaded/1-1747-1557301087.jpg" alt="Ảnh xem trước 3 - Ăn Kiêng" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-purple-500 cursor-pointer" data-book="4" data-index="2">
+              <img src="https://suckhoedoisong.qltns.mediacdn.vn/zoom/600_315/324455921873985536/2023/7/2/anh-duoc-tao-boi-tranmaihuongskds-luc-4689700730459-1688292450467657693595-0-0-392-627-crop-1688292720015643572393.png" alt="Ảnh xem trước 4 - Ăn Kiêng" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-purple-500 cursor-pointer" data-book="4" data-index="3">
+              <img src="https://suckhoedoisong.qltns.mediacdn.vn/Images/thanhloan/2017/07/26/kieng-ky-khi-dung-thuoc-dong-y.jpg" alt="Ảnh xem trước 5 - Ăn Kiêng" class="slide-img w-16 h-20 object-cover border-2 border-transparent rounded hover:border-purple-500 cursor-pointer" data-book="4" data-index="4">
+            </div>
+             <button type="button" class="mt-2 w-full text-center text-blue-600 hover:text-blue-800 view-gallery-btn" data-book="4">
+               <i class="fas fa-search-plus mr-1"></i> Xem ảnh lớn
+             </button>
+         </div>
+       </div>
+       <div class="md:w-3/5 w-full">
+        <h3 class="text-2xl font-bold text-purple-700 mb-3">4. Liệu Pháp Ăn Kiêng Cho Các Loại Bệnh</h3>
+        <div class="mb-4 flex items-center space-x-4">
+          <span class="text-xl text-red-600 font-bold">149.000đ</span>
+          <span class="text-gray-500 text-base line-through">199.000đ</span>
+           <span class="bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded">-25%</span>
+        </div>
+        <p class="mb-4 text-lg leading-relaxed">Tổng hợp chế độ ăn kiêng cổ truyền cho từng nhóm bệnh: thận, gan, tiểu đường, tim mạch, gout... Cẩm nang thực đơn bài thuốc và giải thích giá trị dinh dưỡng khoa học, giúp phục hồi và nâng cao sức khỏe hiệu quả.</p>
+        <ul class="list-disc list-inside ml-1 space-y-1 text-base marker:text-purple-600">
+          <li>Phân tích thực đơn, món ăn bài thuốc phù hợp thể trạng</li>
+          <li>Kết hợp kiến thức Đông và Tây y cập nhật</li>
+          <li>Dễ áp dụng tại nhà, an toàn, hiệu quả lâu dài</li>
+          <li>Sách màu 160 trang, hình ảnh minh họa đẹp mắt, sinh động</li>
+        </ul>
+         <a href="#order-form" class="inline-block mt-5 px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg shadow hover:bg-purple-700 transition">Chọn mua sách này</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="image-modal" class="modal-bg">
+    <div class="modal-content bg-white rounded-lg shadow-2xl p-4 relative">
+       <button type="button" id="modal-close-btn" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl z-10" aria-label="Đóng">
+           &times;
+       </button>
+      <img id="modal-img" src="" class="mb-3" alt="Ảnh xem lớn">
+      <div class="flex justify-center items-center gap-4">
+        <button type="button" id="modal-prev-btn" class="bg-gray-200 hover:bg-yellow-300 px-3 py-1 rounded-full text-lg disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Ảnh trước"><i class="fa-solid fa-arrow-left"></i></button>
+        <span id="modal-counter" class="text-sm text-gray-600"></span>
+        <button type="button" id="modal-next-btn" class="bg-gray-200 hover:bg-yellow-300 px-3 py-1 rounded-full text-lg disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Ảnh kế tiếp"><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <section id="order-form" class="max-w-4xl mx-auto py-16 px-4 bg-gradient-to-b from-white to-yellow-50 rounded-xl shadow-lg">
+    <h2 class="text-center text-3xl md:text-4xl font-extrabold text-blue-700 mb-10">Đặt Hàng Bộ Sách Y Học Cổ Truyền</h2>
+    <form id="mainOrderForm" class="bg-white p-6 md:p-8 shadow-md rounded-lg" autocomplete="off" novalidate>
+      <div class="grid md:grid-cols-2 gap-x-6 gap-y-5">
+        <div>
+          <label for="name" class="font-semibold block mb-1">Họ và tên <span class="text-red-500">*</span></label>
+          <input required id="name" name="name" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" placeholder="Nguyễn Văn A">
+          <p class="text-red-600 text-sm mt-1 error-message hidden">Vui lòng nhập họ tên.</p>
+        </div>
+        <div>
+          <label for="phone" class="font-semibold block mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+          <input required id="phone" name="phone" type="tel" pattern="^(0[1-9][0-9]{8,9})$" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" placeholder="0989123456">
+           <p class="text-red-600 text-sm mt-1 error-message hidden">Vui lòng nhập số điện thoại hợp lệ (10-11 số, bắt đầu bằng 0).</p>
+        </div>
+        <div>
+          <label for="email" class="font-semibold block mb-1">Email</label>
+          <input id="email" name="email" type="email" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" placeholder="email@example.com">
+           <p class="text-red-600 text-sm mt-1 error-message hidden">Vui lòng nhập địa chỉ email hợp lệ.</p>
+        </div>
+        <div class="md:col-span-2">
+          <label class="font-semibold block mb-2">Chọn sách (Để trống nếu mua combo 4 cuốn)</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2">
+            <label class="flex items-center cursor-pointer">
+              <input class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" type="checkbox" name="book[]" value="Mẹo Nhớ Huyệt"> Mẹo Nhớ Huyệt
+            </label>
+            <label class="flex items-center cursor-pointer">
+              <input class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" type="checkbox" name="book[]" value="Khu Phản Xạ"> Khu Phản Xạ
+            </label>
+            <label class="flex items-center cursor-pointer">
+              <input class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" type="checkbox" name="book[]" value="Dưỡng Sinh Kinh Lạc"> Dưỡng Sinh Kinh Lạc
+            </label>
+            <label class="flex items-center cursor-pointer">
+              <input class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" type="checkbox" name="book[]" value="Ăn Kiêng"> Ăn Kiêng
+            </label>
+          </div>
+          <p class="text-gray-500 text-sm mt-1">Mua lẻ hoặc chọn combo 2, 3 cuốn. Mua combo 4 cuốn không cần chọn.</p>
+        </div>
+        <div>
+          <label for="amount" class="font-semibold block mb-1">Số lượng combo/sách</label>
+          <input type="number" id="amount" name="amount" class="w-28 border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" min="1" value="1">
+        </div>
+         <div>
+          <label for="note" class="font-semibold block mb-1">Ghi chú</label>
+          <input id="note" name="note" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" placeholder="Yêu cầu thêm, giờ nhận hàng...">
+        </div>
+        <div class="md:col-span-2">
+          <label class="font-semibold block mb-1">Địa chỉ nhận hàng <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-1">
+            <div>
+                <label for="city" class="sr-only">Tỉnh/Thành phố</label>
+                <select required id="city" name="city" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                    <option value="">Chọn tỉnh/thành</option>
+                </select>
+                 <p class="text-red-500 text-sm mt-1 error-message hidden">Vui lòng chọn tỉnh/thành.</p>
+            </div>
+             <div>
+                <label for="district" class="sr-only">Quận/Huyện</label>
+                <select required id="district" name="district" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                     <option value="">Chọn quận/huyện</option>
+                </select>
+                 <p class="text-red-500 text-sm mt-1 error-message hidden">Vui lòng chọn quận/huyện.</p>
+            </div>
+             <div>
+                <label for="ward" class="sr-only">Phường/Xã</label>
+                <select required id="ward" name="ward" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                     <option value="">Chọn phường/xã</option>
+                </select>
+                 <p class="text-red-500 text-sm mt-1 error-message hidden">Vui lòng chọn phường/xã.</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <label for="address" class="sr-only">Số nhà, tên đường</label>
+            <input required type="text" id="address" name="address" class="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" placeholder="Số nhà, tên đường...">
+             <p class="text-red-500 text-sm mt-1 error-message hidden">Vui lòng nhập số nhà, tên đường.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <button type="submit" id="submit-btn" class="px-10 py-3 bg-red-600 text-white font-bold rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-paper-plane mr-2"></i> Đặt Hàng Ngay
+        </button>
+      </div>
+      <div id="order-message" class="text-lg mt-6 text-center font-semibold hidden"></div>
+    </form>
+  </section>
+
+  <footer class="text-center py-8 text-gray-600 text-sm bg-gradient-to-br from-yellow-50 via-red-50 to-orange-50 mt-12 border-t border-gray-200">
+    <p>&copy; <span id="current-year">2024</span> Sách Y Học Cổ Truyền. <span class="inline-block ml-2"><i class="fa-solid fa-book-medical text-red-500 text-base"></i></span></p>
+    <p class="mt-1 max-w-xl mx-auto px-4">Thông tin trên trang chỉ mang tính tham khảo, không thay thế cho chẩn đoán hoặc điều trị y tế chuyên nghiệp. Luôn hỏi ý kiến bác sĩ hoặc chuyên gia y tế đủ điều kiện cho bất kỳ câu hỏi nào bạn có thể có về tình trạng sức khỏe.</p>
+  </footer>
+
+  <script>
+    // --- Constants and State ---
+    const API_URL_PROVINCES = 'https://provinces.open-api.vn/api/';
+    // !!! API Endpoint đã được cập nhật theo yêu cầu của bạn !!!
+    const SHEETDB_API = 'https://sheetdb.io/api/v1/fg5880qtxha50'; // <-- API ĐÃ ĐƯỢC THAY THẾ
+
+    const imageGalleries = {
+        '1': [ /* URLs for Book 1 */
+            'https://bizbooks.vn/uploads/images/2024/thang-9/1-100-huyet-dao-5.jpg', 'https://newshop.vn/public/uploads/news/top-10-cuon-sach-bam-huyet-tri-bach-benh-min.jpg', 'https://dongyquangminh.vn/wp-content/uploads/2023/12/fdea3958170fbf51e61e.jpg', 'https://images.xuatbanyhoc.vn/Picture/2022/11/8/image-2022110817145788.jpg', 'https://newshop.vn/public/uploads/news/sach-dong-y-min.jpg' ],
+        '2': [ /* URLs for Book 2 */
+            'https://cdn1.fahasa.com/media/flashmagazine/images/page_images/lieu_phap_chua_benh_toan_than___khu_phan_xa/2024_11_04_16_31_50_8-390x510.jpg', 'https://dongyquangminh.vn/wp-content/uploads/2023/12/fa73cdc6e3914bcf1280.jpg', 'https://nhasachminhthang.vn/UserFiles/files/Lich/rp_Lieuphapchuabenhtoanthan_25x35_76tr_Page6.png', 'https://nhasachminhthang.vn/UserFiles/files/Lich/rp_Lieuphapchuabenhtoanthan_25x35_76tr_Page3.png', 'https://salt.tikicdn.com/cache/w300/ts/product/7f/b8/09/74d403a4dd797ed9ddfa7bf7e13e136f.jpg' ],
+        '3': [ /* URLs for Book 3 */
+            'https://cdn1.fahasa.com/media/catalog/product/c/a/cam_nang_duong_sinh_thong_kinh_lac_10_2019_02_22_10_21_43.jpg', 'https://cdn1.fahasa.com/media/catalog/product/c/a/cam_nang_duong_sinh_thong_kinh_lac_9_2019_02_22_10_21_43.jpg', 'https://cdn1.fahasa.com/media/flashmagazine/images/page_images/cam_nang_duong_sinh_thong_kinh_lac/2023_04_19_11_53_24_6-390x510.jpg', 'https://vinabooks.vn/wp-content/uploads/2024/02/2023_04_19_11_53_24_4-390x510-1.jpg', 'https://product.hstatic.net/200000481913/product/4217c824-b224-4447-80bf-d018b5eaeb31_55c8d544a4d64aa882e58e055060696d_large.jpg' ],
+        '4': [ /* URLs for Book 4 */
+            'https://vn-test-11.slatic.net/p/83eab7e9fbdaf041dd4c19d8e1a7fefd.jpg', 'https://tacgia.vn/image/cache/catalog/san-pham/do-huu-dinh/chua-benh-phong-benh-tam-ty-phe-than-can-tacgiavn-500x500.jpg', 'https://bvyhctnghean.vn/Uploaded/1-1747-1557301087.jpg', 'https://suckhoedoisong.qltns.mediacdn.vn/zoom/600_315/324455921873985536/2023/7/2/anh-duoc-tao-boi-tranmaihuongskds-luc-4689700730459-1688292450467657693595-0-0-392-627-crop-1688292720015643572393.png', 'https://suckhoedoisong.qltns.mediacdn.vn/Images/thanhloan/2017/07/26/kieng-ky-khi-dung-thuoc-dong-y.jpg' ]
+    };
+
+    let currentModalImages = [];
+    let currentModalIndex = 0;
+
+    // --- DOM Elements ---
+    const citySelect = document.getElementById('city');
+    const districtSelect = document.getElementById('district');
+    const wardSelect = document.getElementById('ward');
+    const orderForm = document.getElementById('mainOrderForm');
+    const submitButton = document.getElementById('submit-btn');
+    const orderMessageDiv = document.getElementById('order-message');
+    const imageModal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalPrevBtn = document.getElementById('modal-prev-btn');
+    const modalNextBtn = document.getElementById('modal-next-btn');
+    const modalCounter = document.getElementById('modal-counter');
+    const currentYearSpan = document.getElementById('current-year');
+    const galleryThumbnails = document.querySelectorAll('.slide-img[data-index]');
+    const viewGalleryButtons = document.querySelectorAll('.view-gallery-btn');
+    const mainGalleryImages = document.querySelectorAll('.slide-img[data-book]:not([data-index])');
+
+    // --- Helper Functions ---
+    function showInputError(inputElement, message) {
+        const container = inputElement.closest('div');
+        const errorDiv = container ? container.querySelector('.error-message') : null;
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+        inputElement.classList.add('border-red-500');
+        inputElement.classList.remove('border-gray-300');
+    }
+
+    function clearInputError(inputElement) {
+       const container = inputElement.closest('div');
+       const errorDiv = container ? container.querySelector('.error-message') : null;
+         if (errorDiv) {
+            errorDiv.classList.add('hidden');
+        }
+        inputElement.classList.remove('border-red-500');
+        inputElement.classList.add('border-gray-300');
+    }
+
+    function validateInput(inputElement) {
+        clearInputError(inputElement);
+        let isValid = true;
+        const value = inputElement.value.trim();
+        const label = document.querySelector(`label[for='${inputElement.id}']`)?.textContent.replace('*','').trim() || 'Trường này';
+
+        if (inputElement.required && !value) {
+            showInputError(inputElement, `Vui lòng nhập ${label.toLowerCase()}.`);
+            isValid = false;
+        } else if (inputElement.type === 'email' && value && !/^\S+@\S+\.\S+$/.test(value)) {
+            showInputError(inputElement, 'Vui lòng nhập địa chỉ email hợp lệ.');
+            isValid = false;
+        } else if (inputElement.type === 'tel' && value && !inputElement.checkValidity()) {
+             showInputError(inputElement, 'Vui lòng nhập số điện thoại hợp lệ (10-11 số, bắt đầu bằng 0).');
+            isValid = false;
+        } else if (inputElement.tagName === 'SELECT' && inputElement.required && !value) {
+             const selectLabel = inputElement.previousElementSibling?.classList.contains('sr-only')
+                               ? inputElement.previousElementSibling.textContent
+                               : (inputElement.options[0]?.textContent || 'lựa chọn này');
+             showInputError(inputElement, `Vui lòng chọn ${selectLabel.toLowerCase()}.`);
+             isValid = false;
+        }
+        return isValid;
+    }
+
+     function validateForm() {
+        let isFormValid = true;
+        const inputsToValidate = orderForm.querySelectorAll('input[required], select[required]');
+        inputsToValidate.forEach(input => {
+            isFormValid = validateInput(input) & isFormValid;
+        });
+        const emailInput = orderForm.querySelector('#email');
+        if (emailInput.value && !validateInput(emailInput)) {
+            isFormValid = false;
+        }
+        return isFormValid;
+    }
+
+    async function fetchData(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status} for URL: ${url}`);
+                return null;
+            }
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                return await response.json();
+            } else {
+                console.error(`Expected JSON, but received ${contentType} for URL: ${url}`);
+                return null;
+            }
+        } catch (error) {
+            console.error("Could not fetch data:", error);
+            return null;
+        }
+    }
+
+    async function loadCities() {
+        const cities = await fetchData(API_URL_PROVINCES + '?depth=1');
+        if (!cities || !Array.isArray(cities)) {
+             console.error("Failed to load cities or invalid data format.");
+             citySelect.innerHTML = '<option value="">Lỗi tải tỉnh/thành</option>';
+             return;
+        }
+        let optionsHtml = '<option value="">Chọn tỉnh/thành</option>';
+        cities.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+        cities.forEach(city => {
+            optionsHtml += `<option value="${city.code}">${city.name}</option>`;
+        });
+        citySelect.innerHTML = optionsHtml;
+    }
+
+    async function loadDistricts(cityCode) {
+        districtSelect.innerHTML = '<option value="">Đang tải...</option>';
+        wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+        districtSelect.disabled = true;
+        wardSelect.disabled = true;
+        if (!cityCode) {
+            districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+            districtSelect.disabled = true;
+            wardSelect.disabled = true;
+            return;
+        }
+        const cityData = await fetchData(`${API_URL_PROVINCES}p/${cityCode}?depth=2`);
+         if (!cityData || !cityData.districts || !Array.isArray(cityData.districts)) {
+            console.error("Failed to load districts or invalid data format.");
+            districtSelect.innerHTML = '<option value="">Lỗi tải quận/huyện</option>';
+            districtSelect.disabled = true;
+            wardSelect.disabled = true;
+            return;
+         }
+        let optionsHtml = '<option value="">Chọn quận/huyện</option>';
+        cityData.districts.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+        cityData.districts.forEach(district => {
+            optionsHtml += `<option value="${district.code}">${district.name}</option>`;
+        });
+        districtSelect.innerHTML = optionsHtml;
+        districtSelect.disabled = false;
+        wardSelect.disabled = true;
+    }
+
+    async function loadWards(districtCode) {
+        wardSelect.innerHTML = '<option value="">Đang tải...</option>';
+        wardSelect.disabled = true;
+        if (!districtCode) {
+            wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+            wardSelect.disabled = true;
+            return;
+        }
+        const districtData = await fetchData(`${API_URL_PROVINCES}d/${districtCode}?depth=2`);
+        if (!districtData || !districtData.wards || !Array.isArray(districtData.wards)) {
+            console.error("Failed to load wards or invalid data format.");
+            wardSelect.innerHTML = '<option value="">Lỗi tải phường/xã</option>';
+            wardSelect.disabled = true;
+            return;
+        }
+        let optionsHtml = '<option value="">Chọn phường/xã</option>';
+        districtData.wards.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+        districtData.wards.forEach(ward => {
+            optionsHtml += `<option value="${ward.code}">${ward.name}</option>`;
+        });
+        wardSelect.innerHTML = optionsHtml;
+        wardSelect.disabled = false;
+    }
+
+    function openImageModal(bookId, startIndex = 0) {
+        currentModalImages = imageGalleries[bookId] || [];
+        if (currentModalImages.length === 0) return;
+        currentModalIndex = Math.max(0, Math.min(startIndex, currentModalImages.length - 1));
+        updateModalContent();
+        imageModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+        imageModal.classList.remove('active');
+         document.body.style.overflow = '';
+    }
+
+    function updateModalContent() {
+        if (!modalImg || !modalCounter || currentModalImages.length === 0) return;
+        modalImg.src = currentModalImages[currentModalIndex];
+        modalImg.alt = `Ảnh ${currentModalIndex + 1} / ${currentModalImages.length}`;
+        modalCounter.textContent = `${currentModalIndex + 1} / ${currentModalImages.length}`;
+        if (modalPrevBtn) {
+            modalPrevBtn.disabled = currentModalIndex === 0;
+            modalPrevBtn.classList.toggle('opacity-50', modalPrevBtn.disabled);
+            modalPrevBtn.classList.toggle('cursor-not-allowed', modalPrevBtn.disabled);
+        }
+        if (modalNextBtn) {
+            modalNextBtn.disabled = currentModalIndex === currentModalImages.length - 1;
+            modalNextBtn.classList.toggle('opacity-50', modalNextBtn.disabled);
+            modalNextBtn.classList.toggle('cursor-not-allowed', modalNextBtn.disabled);
+        }
+    }
+
+    function navigateModal(direction) {
+        if (currentModalImages.length === 0) return;
+        const newIndex = currentModalIndex + direction;
+        if (newIndex >= 0 && newIndex < currentModalImages.length) {
+            currentModalIndex = newIndex;
+            updateModalContent();
+        }
+    }
+
+    async function handleFormSubmit(event) {
+        event.preventDefault();
+        orderMessageDiv.classList.add('hidden');
+        orderMessageDiv.textContent = '';
+
+        if (!validateForm()) {
+             orderMessageDiv.textContent = 'Vui lòng kiểm tra lại các trường thông tin được đánh dấu đỏ.';
+             orderMessageDiv.className = 'text-lg mt-6 text-center font-semibold text-red-600';
+             orderMessageDiv.classList.remove('hidden');
+             const firstError = orderForm.querySelector('.border-red-500');
+             firstError?.focus();
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang gửi...';
+
+        const cityText = citySelect.options[citySelect.selectedIndex]?.text || '';
+        const districtText = districtSelect.options[districtSelect.selectedIndex]?.text || '';
+        const wardText = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+
+        const formData = new FormData(orderForm);
+        const selectedBooks = formData.getAll('book[]').join('; ');
+        const quantity = formData.get('amount') || '1';
+        const orderDetails = selectedBooks || 'Combo 4 cuốn';
+
+        // Dữ liệu gửi đi - Đảm bảo các KEY khớp với tên cột Google Sheet
+        const dataToSend = {
+            'date': new Date().toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            'name': formData.get('name'),
+            'phone': formData.get('phone'),
+            'address': `${formData.get('address') || ''}, ${wardText}, ${districtText}, ${cityText}`,
+            'don_hang': `${orderDetails} (SL: ${quantity})`,
+            'Note': formData.get('note') || '',
+        };
+
+        console.log("Data to send:", dataToSend); // Log dữ liệu gửi đi
+
+        // --- KIỂM TRA SHEETDB_API ---
+        if (!SHEETDB_API || SHEETDB_API === 'https://sheetdb.io/api/v1/YOUR_SHEETDB_API_ENDPOINT') {
+             console.error("SHEETDB_API is not set correctly! Please replace the placeholder URL.");
+             orderMessageDiv.textContent = 'Lỗi cấu hình: Địa chỉ API SheetDB chưa được thiết lập chính xác trong mã nguồn.';
+             orderMessageDiv.className = 'text-lg mt-6 text-center font-semibold text-red-700';
+             orderMessageDiv.classList.remove('hidden');
+             submitButton.disabled = false;
+             submitButton.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> Đặt Hàng Ngay';
+             return; // Dừng thực thi nếu API không đúng
+        }
+        // --- KẾT THÚC KIỂM TRA ---
+
+
+        try {
+            const response = await fetch(SHEETDB_API, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend)
+            });
+
+            console.log("SheetDB Response Status:", response.status);
+
+            if (response.ok) {
+                const result = await response.json().catch(() => ({}));
+                console.log("SheetDB Success Response:", result);
+                orderMessageDiv.textContent = 'Đặt hàng thành công! Chúng tôi sẽ liên hệ xác nhận đơn hàng của bạn sớm nhất.';
+                orderMessageDiv.className = 'text-lg mt-6 text-center font-semibold text-green-700';
+                orderForm.reset();
+                citySelect.value = '';
+                districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                districtSelect.disabled = true;
+                wardSelect.disabled = true;
+                orderForm.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+                orderForm.querySelectorAll('.border-red-500').forEach(el => {
+                    el.classList.remove('border-red-500');
+                    el.classList.add('border-gray-300');
+                });
+            } else {
+                const errorText = await response.text();
+                console.error("SheetDB Error Response Text:", errorText);
+                // Phân tích lỗi cụ thể hơn
+                let errorMessage = `Lỗi từ SheetDB (${response.status}): ${response.statusText}`;
+                if (response.status === 404) {
+                    errorMessage = `Lỗi từ SheetDB (404): Không tìm thấy API endpoint. Vui lòng kiểm tra lại đường dẫn API trong mã nguồn.`;
+                    if (errorText.includes("Wrong API id")) {
+                         errorMessage += ` (Lỗi: Sai API ID)`;
+                    }
+                } else {
+                    // Cố gắng parse lỗi JSON nếu có
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        if (errorData && errorData.error) {
+                             errorMessage += ` - ${errorData.error}`;
+                        }
+                    } catch(e) {
+                        if (errorText.length < 100) {
+                            errorMessage += ` - ${errorText}`;
+                        }
+                    }
+                }
+                throw new Error(errorMessage);
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            orderMessageDiv.textContent = `Đã có lỗi xảy ra trong quá trình đặt hàng. Vui lòng thử lại sau hoặc liên hệ trực tiếp. (Chi tiết: ${error.message})`;
+            orderMessageDiv.className = 'text-lg mt-6 text-center font-semibold text-red-700';
+        } finally {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> Đặt Hàng Ngay';
+            orderMessageDiv.classList.remove('hidden');
+        }
+    }
+
+    // --- Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCities();
+        if(currentYearSpan) {
+            currentYearSpan.textContent = new Date().getFullYear();
+        }
+        citySelect?.addEventListener('change', function() { validateInput(this); loadDistricts(this.value); });
+        districtSelect?.addEventListener('change', function() { validateInput(this); loadWards(this.value); });
+        wardSelect?.addEventListener('change', function() { validateInput(this); });
+        orderForm?.addEventListener('submit', handleFormSubmit);
+        orderForm?.querySelectorAll('input[required], select[required], input[type="email"], input[type="tel"]').forEach(input => {
+            input.addEventListener('blur', () => validateInput(input));
+        });
+
+        function setupGalleryListeners() {
+            galleryThumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    const bookId = thumb.dataset.book;
+                    const index = parseInt(thumb.dataset.index, 10);
+                    if (!bookId || isNaN(index)) return;
+                    const mainImg = document.getElementById(`main-img-${bookId}`);
+                    if(mainImg) mainImg.src = imageGalleries[bookId]?.[index] || thumb.src;
+                    document.querySelectorAll(`.slide-img[data-book='${bookId}'][data-index]`).forEach(t => {
+                        t.classList.remove('border-yellow-500', 'border-pink-500', 'border-green-500', 'border-purple-500');
+                        t.classList.add('border-transparent');
+                    });
+                    thumb.classList.remove('border-transparent');
+                    const borderColors = { '1': 'border-yellow-500', '2': 'border-pink-500', '3': 'border-green-500', '4': 'border-purple-500' };
+                    thumb.classList.add(borderColors[bookId] || 'border-gray-500');
+                    openImageModal(bookId, index);
+                });
+            });
+            viewGalleryButtons.forEach(button => {
+                 button.addEventListener('click', () => {
+                    const bookId = button.dataset.book;
+                    if (!bookId) return;
+                    openImageModal(bookId, 0);
+                });
+            });
+            mainGalleryImages.forEach(img => {
+                img.addEventListener('click', () => {
+                    const bookId = img.dataset.book;
+                    if (!bookId || !imageGalleries[bookId]) return;
+                    const currentGallery = imageGalleries[bookId];
+                    const currentIndex = currentGallery.findIndex(src => src === img.src);
+                    openImageModal(bookId, Math.max(0, currentIndex));
+                });
+            });
+            modalCloseBtn?.addEventListener('click', closeImageModal);
+            imageModal?.addEventListener('click', (event) => { if (event.target === imageModal) { closeImageModal(); } });
+            modalPrevBtn?.addEventListener('click', () => navigateModal(-1));
+            modalNextBtn?.addEventListener('click', () => navigateModal(1));
+            document.addEventListener('keydown', (event) => {
+                if (!imageModal?.classList.contains('active')) return;
+                if (event.key === 'Escape') { closeImageModal(); }
+                else if (event.key === 'ArrowLeft') { navigateModal(-1); }
+                else if (event.key === 'ArrowRight') { navigateModal(1); }
+            });
+        }
+        setupGalleryListeners();
+
+         function setupImageErrorHandling() {
+             document.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('onerror') && !img.src.includes('placehold.co')) {
+                     img.dataset.originalSrc = img.src;
+                     img.onerror = function() {
+                        if (this.src.includes('placehold.co')) return;
+                        this.onerror = null;
+                        const w = this.naturalWidth || this.width || this.parentElement?.clientWidth || 150;
+                        const h = this.naturalHeight || this.height || this.parentElement?.clientHeight || 150;
+                        this.src = `https://placehold.co/${w}x${h}/e0e0e0/757575?text=Ảnh+lỗi`;
+                        this.alt = "Hình ảnh bị lỗi";
+                        console.warn(`Image failed to load: ${this.dataset.originalSrc || '(unknown)'}`);
+                     };
+                }
+            });
+         }
+         setupImageErrorHandling();
+
+         if (districtSelect) districtSelect.disabled = true;
+         if (wardSelect) wardSelect.disabled = true;
+    });
+  </script>
+
+</body>
+</html>
